@@ -1,0 +1,50 @@
+name: Build Windows EXE
+
+on:
+  workflow_dispatch:
+  push:
+    branches:
+      - main
+
+jobs:
+  build:
+    runs-on: windows-latest
+
+    steps:
+      - name: Checkout
+        uses: actions/checkout@v4
+
+      - name: Setup .NET 8
+        uses: actions/setup-dotnet@v4
+        with:
+          dotnet-version: '8.0.x'
+
+      - name: Install FFmpeg
+        shell: powershell
+        run: |
+          choco install ffmpeg -y
+          $ff = (Get-Command ffmpeg.exe).Source
+          $fp = (Get-Command ffprobe.exe).Source
+          Copy-Item $ff "$env:GITHUB_WORKSPACE\ffmpeg.exe"
+          Copy-Item $fp "$env:GITHUB_WORKSPACE\ffprobe.exe"
+
+      - name: Publish Windows App
+        run: dotnet publish NTS.TaoMP4.csproj -c Release -r win-x64 --self-contained true -p:PublishSingleFile=true -o publish
+
+      - name: Copy FFmpeg and logo
+        shell: powershell
+        run: |
+          Copy-Item ffmpeg.exe publish\ffmpeg.exe
+          Copy-Item ffprobe.exe publish\ffprobe.exe
+          New-Item -ItemType Directory -Force publish\Assets | Out-Null
+          Copy-Item Assets\logo.png publish\Assets\logo.png
+
+      - name: Create ZIP
+        shell: powershell
+        run: Compress-Archive -Path publish\* -DestinationPath NTS-Tao-MP4-V1-Windows.zip
+
+      - name: Upload Windows App
+        uses: actions/upload-artifact@v4
+        with:
+          name: NTS-Tao-MP4-V1-Windows
+          path: NTS-Tao-MP4-V1-Windows.zip
