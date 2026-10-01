@@ -154,8 +154,8 @@ public sealed class MainForm : Form
         try
         {
             app = Activator.CreateInstance(t)!;
-            app.Visible = 0;
-            pres = app.Presentations.Open(ppt, WithWindow: 0);
+            app.Visible = -1;
+            pres = app.Presentations.Open(ppt, WithWindow: -1);
             int count = pres.Slides.Count;
             pres.Export(outDir, "PNG", 1920, 1080);
             pres.Close(); app.Quit();
