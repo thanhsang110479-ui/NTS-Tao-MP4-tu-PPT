@@ -1,0 +1,21 @@
+<Project Sdk="Microsoft.NET.Sdk">
+  <PropertyGroup>
+    <OutputType>WinExe</OutputType>
+    <TargetFramework>net8.0-windows</TargetFramework>
+    <UseWindowsForms>true</UseWindowsForms>
+    <ImplicitUsings>enable</ImplicitUsings>
+    <Nullable>enable</Nullable>
+    <ApplicationManifest>app.manifest</ApplicationManifest>
+    <AssemblyName>NTS-Tao-MP4-tu-PPT</AssemblyName>
+    <RootNamespace>NTS.TaoMP4</RootNamespace>
+    <PublishSingleFile>true</PublishSingleFile>
+    <SelfContained>true</SelfContained>
+    <RuntimeIdentifier>win-x64</RuntimeIdentifier>
+    <IncludeNativeLibrariesForSelfExtract>true</IncludeNativeLibrariesForSelfExtract>
+  </PropertyGroup>
+  <ItemGroup>
+    <None Include="Assets\logo.png" CopyToOutputDirectory="PreserveNewest" />
+    <None Include="ffmpeg.exe" CopyToOutputDirectory="PreserveNewest" Condition="Exists('ffmpeg.exe')" />
+    <None Include="ffprobe.exe" CopyToOutputDirectory="PreserveNewest" Condition="Exists('ffprobe.exe')" />
+  </ItemGroup>
+</Project>
