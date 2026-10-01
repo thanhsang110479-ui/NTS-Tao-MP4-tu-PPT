@@ -184,6 +184,18 @@ public sealed class MainForm : Form
         using var p = Process.Start(psi) ?? throw new Exception("Không thể chạy công cụ tạo video.");
         string err = await p.StandardError.ReadToEndAsync();
         await p.WaitForExitAsync();
-        if (p.ExitCode != 0) throw new Exception("Lỗi khi tạo video:\n" + err[^Math.Min(err.Length, 1800)..]);
+        if (p.ExitCode != 0)
+{
+    string detail = string.IsNullOrWhiteSpace(err)
+        ? "FFmpeg không trả về thông báo lỗi."
+        : err;
+
+    throw new Exception(
+        $"FFmpeg tạo video thất bại.\n\n" +
+        $"Exit code: {p.ExitCode}\n\n" +
+        $"Lệnh:\n{exe} {args}\n\n" +
+        $"Chi tiết FFmpeg:\n{detail}"
+    );
+}
     }
 }
