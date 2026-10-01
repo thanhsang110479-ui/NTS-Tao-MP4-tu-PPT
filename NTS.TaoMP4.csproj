@@ -6,6 +6,7 @@
     <ImplicitUsings>enable</ImplicitUsings>
     <Nullable>enable</Nullable>
     <ApplicationManifest>app.manifest</ApplicationManifest>
+    <ApplicationIcon>NTS-Tao-MP4-tu-PPT.ico</ApplicationIcon>
     <AssemblyName>NTS-Tao-MP4-tu-PPT</AssemblyName>
     <RootNamespace>NTS.TaoMP4</RootNamespace>
     <PublishSingleFile>true</PublishSingleFile>
