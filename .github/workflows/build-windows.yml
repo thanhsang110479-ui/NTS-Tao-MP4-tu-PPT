@@ -20,29 +20,27 @@ jobs:
           dotnet-version: '8.0.x'
 
       - name: Download real FFmpeg
-  shell: powershell
-  run: |
-    $url = "https://www.gyan.dev/ffmpeg/builds/ffmpeg-release-essentials.zip"
-    Invoke-WebRequest -Uri $url -OutFile ffmpeg.zip
+        shell: powershell
+        run: |
+          $url = "https://www.gyan.dev/ffmpeg/builds/ffmpeg-release-essentials.zip"
+          Invoke-WebRequest -Uri $url -OutFile ffmpeg.zip
 
-    Expand-Archive -Path ffmpeg.zip -DestinationPath ffmpeg_temp -Force
+          Expand-Archive -Path ffmpeg.zip -DestinationPath ffmpeg_temp -Force
 
-    $ffmpeg = Get-ChildItem -Path ffmpeg_temp -Recurse -Filter ffmpeg.exe | Select-Object -First 1
-    $ffprobe = Get-ChildItem -Path ffmpeg_temp -Recurse -Filter ffprobe.exe | Select-Object -First 1
+          $ffmpeg = Get-ChildItem -Path ffmpeg_temp -Recurse -Filter ffmpeg.exe | Select-Object -First 1
+          $ffprobe = Get-ChildItem -Path ffmpeg_temp -Recurse -Filter ffprobe.exe | Select-Object -First 1
 
-    if (-not $ffmpeg) { throw "Không tìm thấy ffmpeg.exe trong gói tải về." }
-    if (-not $ffprobe) { throw "Không tìm thấy ffprobe.exe trong gói tải về." }
+          if (-not $ffmpeg) { throw "Khong tim thay ffmpeg.exe" }
+          if (-not $ffprobe) { throw "Khong tim thay ffprobe.exe" }
 
-    Copy-Item $ffmpeg.FullName "$env:GITHUB_WORKSPACE\ffmpeg.exe"
-    Copy-Item $ffprobe.FullName "$env:GITHUB_WORKSPACE\ffprobe.exe"
+          Copy-Item $ffmpeg.FullName "$env:GITHUB_WORKSPACE\ffmpeg.exe"
+          Copy-Item $ffprobe.FullName "$env:GITHUB_WORKSPACE\ffprobe.exe"
 
-    Write-Host "=== KIEM TRA FFMPEG ==="
-    & "$env:GITHUB_WORKSPACE\ffmpeg.exe" -version
-    if ($LASTEXITCODE -ne 0) { throw "ffmpeg.exe không chạy được." }
+          & "$env:GITHUB_WORKSPACE\ffmpeg.exe" -version
+          if ($LASTEXITCODE -ne 0) { throw "ffmpeg.exe khong chay duoc" }
 
-    Write-Host "=== KICH THUOC FILE ==="
-    Get-Item "$env:GITHUB_WORKSPACE\ffmpeg.exe" | Select-Object Name,Length
-    Get-Item "$env:GITHUB_WORKSPACE\ffprobe.exe" | Select-Object Name,Length
+          Get-Item "$env:GITHUB_WORKSPACE\ffmpeg.exe" | Select-Object Name,Length
+          Get-Item "$env:GITHUB_WORKSPACE\ffprobe.exe" | Select-Object Name,Length
       - name: Publish Windows App
         run: dotnet publish NTS.TaoMP4.csproj -c Release -r win-x64 --self-contained true -p:PublishSingleFile=true -o publish
 
